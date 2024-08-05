@@ -1,17 +1,17 @@
-import './App.css'
-import React from 'react';
-import Login from './components/Login.jsx'
+import './App.css';
+import React, { useState } from 'react';
+import Login from './components/Login.jsx';
 import Navbar from './components/Navbar.jsx';
-import { BrowserRouter as Router , Routes , Route , NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Dash from './components/Dash.jsx';
 
 function App() {
-  
 
   return (
     <>
-      <Navbar />
+      <Navbar/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -133,7 +133,11 @@ function Navbar() {
               <Route path='/analyse' element={<Analyse />} />
               <Route path='/support' element={<Support />} />
             </Routes>
+            <div className="footer">
+
           </div>
+          </div>
+          
         </div>
       </div>
     </Router>

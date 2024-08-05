@@ -52,7 +52,7 @@ function Login() {
               </div>
               {
                 showDropdown && (
-                  <div className='dropdown'>
+                  <div className='languages-dropdown'>
                     <div className='ul-lang m-0'>
                       <div className=' languages mt-2' style={{cursor : 'pointer'}} onClick={() => ChooseLanguage('EN')}>
                         <img src="/en.png" alt="eng" style={{height:'22px' , width :'23px' , marginRight:'5px'}} /><p className='m-0'
@@ -78,19 +78,19 @@ function Login() {
 
                 <div className=' mt-5'>
                   <label style={{fontWeight: '600'}} className=' form-label' htmlFor="email">{Email}</label>
-                  <input className=' form-control' type="email" name="email" placeholder={EmailPlaceholder} />
+                  <input className=' form-control login-inputs' type="email" name="email" placeholder={EmailPlaceholder} />
                 </div>
 
                 <div className='mt-4'>
                   <label style={{fontWeight: '600'}} className=' form-label' htmlFor="password">{Pwd}</label>
                   <div className='input-group'>
-                  <input className='form-control pwd' type={showPassword ? "text" : "password"} name="password" placeholder={PasswordPlaceholder} />
+                  <input className='form-control login-inputs pwd' type={showPassword ? "text" : "password"} name="password" placeholder={PasswordPlaceholder} />
                   <span className='input-group-text eye' onClick={() => setShowPassword((prev) => !prev)}>
                     <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                   </span>
                 </div>
 
-                <button className=' mt-4 btn custom-btn w-100'>{SignIn}</button>
+                <button className=' mt-4 btn login-btn w-100' onClick={() => handlesubmit()}>{SignIn}</button>
                   
                 </div>
               </form>

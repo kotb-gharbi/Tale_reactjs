@@ -1,44 +1,41 @@
-
-
+.ul-lang {
+  list-style: none;
+}
   
-  .ul-lang {
-    list-style: none;
-  }
+.languages-dropdown {
+  position: absolute;
+  top: 4.2rem;
+  right: 1.8rem;
+  background-color: #fff;
+  border: 1px solid rgba(0,189,169,1);
+  width: 100px;
+  border-radius: 5px;
+}
   
-  .dropdown {
-    position: absolute;
-    top: 4.2rem;
-    right: 1.8rem;
-    background-color: #fff;
-    border: 1px solid rgba(0,189,169,1);
-    width: 100px;
-    border-radius: 5px;
-  }
+.languages-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -0.4rem;
+  right: 1.1rem;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  background-color: #fff;
+  border-left: 1px solid rgba(0,189,169,1);
+  border-top: 1px solid rgba(0,189,169,1);
+}
   
-  .dropdown::before {
-    content: '';
-    position: absolute;
-    top: -0.4rem;
-    right: 1.1rem;
-    width: 10px;
-    height: 10px;
-    transform: rotate(45deg);
-    background-color: #fff;
-    border-left: 1px solid rgba(0,189,169,1);
-    border-top: 1px solid rgba(0,189,169,1);
-  }
+.languages {
+  padding: 5px 0 5px 8px;
+  display: flex;
+  justify-content: center;
+  padding-right: 10px;
+}
   
-  .languages {
-    padding: 5px 0 5px 8px;
-    display: flex;
-    justify-content: center;
-    padding-right: 10px;
-  }
-  
-  .languages:hover {
-    background: rgb(0,189,169);
-    background: linear-gradient(90deg, rgba(0,189,169,1) 0%, rgba(0,194,255,1) 100%);
-  }
+.languages:hover {
+  background: rgb(0,189,169);
+  background: linear-gradient(90deg, rgba(0,189,169,1) 0%, rgba(0,194,255,1) 100%);
+}
   
 .login{
   display: flex;
@@ -47,7 +44,7 @@
   height: 70vh;
 }
 
-.form-control {
+.login-inputs {
   border-radius: 10px; 
   height: 45px;
   background-color: rgb(216, 216, 216);
@@ -57,7 +54,7 @@
   border-right-color: transparent;
 }
 
-.form-control:focus {
+.login-inputs:focus {
   box-shadow: none;
   border: 3px solid transparent;
   border-color: #00bfd2;
@@ -70,14 +67,14 @@
   border-radius: 10px;
 }
 
-.custom-btn{
+.login-btn{
   background-color: black;
   border-radius: 10px;
   color: white;
   height: 50px;
 }
 
-.custom-btn:hover{
+.login-btn:hover{
   background-color: rgb(28, 28, 28);
   color: white;
 }

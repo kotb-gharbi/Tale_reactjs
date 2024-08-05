@@ -148,3 +148,11 @@ body, html {
     height: 1px;
     background-color: #fff;
 }
+
+.container-fluid{
+    margin-top: 21px;
+}
+
+.footer{
+    height: 75px;
+}
