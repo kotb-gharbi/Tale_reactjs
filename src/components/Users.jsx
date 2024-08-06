@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Users.css';
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,6 +10,7 @@ function Users() {
   const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); 
+
 
   const handleCategory = (index) => {
     setActiveCategory(index);
@@ -75,7 +77,10 @@ function Users() {
     {
       name: <h6 className='m-0'>Actions</h6>,
       cell : row => (
-        <FontAwesomeIcon icon={faEllipsis} className='actions-dots' />
+        <Link to={`/sidebar/gestion-des-utilisateurs/${row.id}`} style={{textDecoration:'none' , color: 'inherit'}}>
+          <FontAwesomeIcon icon={faEllipsis} className='actions-dots'/>
+        </Link>
+        
       ),
       sortable : false,
       width:'7rem'

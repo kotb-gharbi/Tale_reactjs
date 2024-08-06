@@ -1,0 +1,15 @@
+.color{
+    color: black;
+    height: 80vh;
+}
+.not-found-button {
+    color: white; 
+    background-color: rgba(0,189,169,1);
+    border-radius: 10px;
+    margin-top: 10px;
+
+}
+.not-found-button:hover{
+    background-color: rgb(0, 164, 148);
+    color: white;
+}

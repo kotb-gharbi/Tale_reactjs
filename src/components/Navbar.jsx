@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import './Navbar.css';
-import Roles from './Roles.jsx';
-import Dash from './Dash.jsx';
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import Users from './Users.jsx';
-import Sanctions from './Sanctions.jsx';
-import Reclamations from './Reclamations.jsx';
-import Approbation from './Approbation.jsx';
-import Analyse from './Analyse.jsx';
-import Support from './Support.jsx';
+import {NavLink, Outlet } from 'react-router-dom';
+
 
 function Navbar() {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <Router>
+    <>
       <div className="d-flex justify-content-between mt-3">
         <div>
           <img src="/tale-logo.png" alt="Tale" className='tale pointer' />
@@ -32,7 +25,7 @@ function Navbar() {
           <div className="col-md-2" style={{maxWidth: 'fit-content'}}>
             <div className={`sidebar ${expanded ? 'sidebar-active'  : ''}`}>
             <ul className='elements'>
-              <NavLink to='/dashboard' className="sidebar-link">
+              <NavLink to='/sidebar/dashboard' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -42,7 +35,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/gestion-des-utilisateur' className="sidebar-link">
+              <NavLink to='/sidebar/gestion-des-utilisateurs' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -52,7 +45,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/sanctions' className="sidebar-link">
+              <NavLink to='/sidebar/sanctions' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -62,7 +55,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/reclamations' className="sidebar-link">
+              <NavLink to='/sidebar/reclamations' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className='ligne'>
@@ -72,7 +65,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/approbation' className="sidebar-link">
+              <NavLink to='/sidebar/approbation' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -82,7 +75,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/roles' className="sidebar-link">
+              <NavLink to='/sidebar/roles' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -92,7 +85,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/analyse' className="sidebar-link">
+              <NavLink to='/sidebar/analyse' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -102,7 +95,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
-              <NavLink to='/support' className="sidebar-link">
+              <NavLink to='/sidebar/support' className="sidebar-link">
                 {({ isActive }) => (
                   <li className={`item pointer ${isActive ? 'active' : ''}`}>
                     <div className="ligne">
@@ -112,6 +105,7 @@ function Navbar() {
                   </li>
                 )}
               </NavLink>
+              
             </ul>
             <div className='copyright-line'></div>
               {expanded ? (
@@ -123,25 +117,15 @@ function Navbar() {
           </div>
           
           <div className='col ps-0'>
-            <Routes>
-              <Route path='/roles' element={<Roles />} />
-              <Route path='/dashboard' element={<Dash />} />
-              <Route path='/gestion-des-utilisateur' element={<Users />} />
-              <Route path='/sanctions' element={<Sanctions />} />
-              <Route path='/reclamations' element={<Reclamations />} />
-              <Route path='/approbation' element={<Approbation />} />
-              <Route path='/analyse' element={<Analyse />} />
-              <Route path='/support' element={<Support />} />
-            </Routes>
-            <div className="footer">
-
-          </div>
+            <Outlet />
+            <div className="footer"></div>
           </div>
           
         </div>
       </div>
-    </Router>
+      </>
   );
+  
 }
 
 export default Navbar;

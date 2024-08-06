@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import './Login.css'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import {useForm} from 'react-hook-form'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
-
+  const navigate = useNavigate()
   const [language,setlanguage] = useState("EN")
   const [showDropdown, setShowDropdown] = useState(false)
   const [EmailPlaceholder,setEmailPlaceholder] = useState("Enter your email address")
@@ -15,7 +18,27 @@ function Login() {
   const [SignIn , setSignIn] = useState("Sign IN")
   const [showPassword, setShowPassword] = useState(true)
 
+  const {
+    register , 
+    handleSubmit , 
+    formState : {errors},
+   } = useForm()
 
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', data)
+      localStorage.setItem("token" , response.data.token)
+      console.log(response)
+      console.log(response.data.message);
+      if(response.data.status){
+        navigate('/sidebar/dashboard')
+      }
+      
+    }catch(error){
+      console.log(error)
+    }
+    
+  }
 
   const ChooseLanguage = (lang) => {
     setlanguage(lang)
@@ -72,25 +95,54 @@ function Login() {
         <div className="container">
           <div className="row login">
             <div className="col-md-4">
-              <form action="">
+              <form onSubmit={handleSubmit(onSubmit)} >
 
-                <h4 className=' text-center' style={{fontWeight: 'bold'}}>SuperAdmin TALE</h4>
+                <h4 className=' text-center' style={{fontWeight: 'bold' , fontSize:'32px'}}>SuperAdmin TALE</h4>
 
                 <div className=' mt-5'>
                   <label style={{fontWeight: '600'}} className=' form-label' htmlFor="email">{Email}</label>
-                  <input className=' form-control login-inputs' type="email" name="email" placeholder={EmailPlaceholder} />
+                  <input className=' form-control login-inputs' type="text" 
+                    name="email" 
+                    placeholder={EmailPlaceholder}
+                    {...register("email", {
+                      required: '*Email is required' , 
+                      validate: value =>
+                        /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i.test(value) || "*Invalid email format"
+                      
+                    })}
+                  />
+                  <div className='error-message'>
+                    {errors.email && (
+                      <div style={{ color: 'red' }}>{errors.email.message}</div>
+                    )}
+                </div>
                 </div>
 
-                <div className='mt-4'>
+                <div className='mt-3'>
                   <label style={{fontWeight: '600'}} className=' form-label' htmlFor="password">{Pwd}</label>
                   <div className='input-group'>
-                  <input className='form-control login-inputs pwd' type={showPassword ? "text" : "password"} name="password" placeholder={PasswordPlaceholder} />
-                  <span className='input-group-text eye' onClick={() => setShowPassword((prev) => !prev)}>
-                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-                  </span>
+                    <input className='form-control login-inputs pwd' type={showPassword ? "text" : "password"} 
+                      name="password" 
+                      placeholder={PasswordPlaceholder}
+                      {...register("password" , {
+                        required: '*Password is required',
+                        minLength: {
+                          value: 8,
+                          message: '*Please enter at least 8 caracters',
+                        }
+                      })}
+                    />
+                    <span className='input-group-text eye' onClick={() => setShowPassword((prev) => !prev)}>
+                      <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                    </span>
+                  </div>
+                  <div className='error-message'>
+                    {errors.password && (
+                      <div style={{ color: 'red' }}>{errors.password.message}</div>
+                    )}
                 </div>
 
-                <button className=' mt-4 btn login-btn w-100' onClick={() => handlesubmit()}>{SignIn}</button>
+                <button type='submit' className=' mt-3 btn login-btn w-100' >{SignIn}</button>
                   
                 </div>
               </form>
