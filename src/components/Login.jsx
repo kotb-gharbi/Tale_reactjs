@@ -21,17 +21,27 @@ function Login() {
   const {
     register , 
     handleSubmit , 
-    formState : {errors},
+    setError,
+    formState : {errors , isSubmitting},
    } = useForm()
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:8000/api/login', data)
-      localStorage.setItem("token" , response.data.token)
-      console.log(response)
-      console.log(response.data.message);
+
       if(response.data.status){
+        localStorage.setItem("token" , response.data.token)
         navigate('/sidebar/dashboard')
+      }
+      if(response.data.message === "Email incorrect"){
+        setError('email', {
+          message : '*Email incorrect'
+        })
+      }
+      if(response.data.message === "Password incorrect"){
+        setError('password', {
+          message : '*Password incorrect'
+        })
       }
       
     }catch(error){
@@ -142,7 +152,9 @@ function Login() {
                     )}
                 </div>
 
-                <button type='submit' className=' mt-3 btn login-btn w-100' >{SignIn}</button>
+                <button disabled={isSubmitting} type='submit' className=' mt-3 btn login-btn w-100' >
+                  {isSubmitting ? "Loading..." : SignIn}
+                </button>
                   
                 </div>
               </form>
