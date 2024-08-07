@@ -4,11 +4,20 @@ import { Link } from 'react-router-dom';
 import './EditProfile.css'
 import {faEllipsis ,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { useParams } from 'react-router-dom'
+import ReactFlagsSelect from "react-flags-select-2";
+import { getName } from 'country-list';
 
 
 function EditProfile() {
 
   const params = useParams();
+
+  const [isloading , setisloading] = useState(false)
+  const [selected, setSelected] = useState("");
+  const [countryName, setcountryName] = useState("");
+  const [tel, settel] = useState("");
+  const [address, setaddress] = useState("");
+  const [CodePostal, setCodePostal] = useState("");
 
   const [ActiveInfo, setActiveInfo] = useState(1);
   const [lastName, setLastName] = useState('');
@@ -19,11 +28,15 @@ function EditProfile() {
   const [password, setpassword] = useState('');
   const [isEditing, setIsEditing] = useState({
     name: false,
-    lastName: false,
     email : false, 
+    password :false,
+    lastName: false,
     birth : false,
     gender : false,
-    password :false,
+    country : false,
+    tel: false , 
+    address : false ,
+    CodePostal : false, 
   });
 
   const toggleEdit =  (field) => (
@@ -37,7 +50,11 @@ function EditProfile() {
     setActiveInfo(index);
   }
 
-
+  if(isloading){
+    return <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+  }
 
 
   return (
@@ -95,7 +112,8 @@ function EditProfile() {
               <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="name" 
               disabled={!isEditing.name ? true : false}
               value={name}
-              onChange={(e) => setname(e.target.value)} />
+              onChange={(e) => setname(e.target.value)} 
+              placeholder='Entrez votre prénom'/>
             </div>
             <div className="col-md-6">
               <div className=' d-flex justify-content-between '>
@@ -112,7 +130,8 @@ function EditProfile() {
               <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
                disabled={!isEditing.lastName ? true : false}
                value={lastName}
-              onChange={(e) => setLastName(e.target.value)} />
+              onChange={(e) => setLastName(e.target.value)} 
+              placeholder='Entrez votre nom de famille'/>
             </div>
           </div>
           <div className="row mt-4">
@@ -131,7 +150,8 @@ function EditProfile() {
               <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
                disabled={!isEditing.birth ? true : false}
                value={birth}
-              onChange={(e) => setbirth(e.target.value)} />
+              onChange={(e) => setbirth(e.target.value)} 
+              placeholder='Entrez votre date de naissance'/>
             </div>
             <div className="col-md-6">
               <div className=' d-flex justify-content-between '>
@@ -151,7 +171,7 @@ function EditProfile() {
               onChange={(e) => setgender(e.target.value)} />
             </div>
           </div>
-          <div className="row mt-4">
+          <div className="row my-4">
           <div className="col-md-6">
               <div className=' d-flex justify-content-between '>
                 <label htmlFor='last-name' className='form-label'>Adresse e-mail</label>
@@ -167,7 +187,8 @@ function EditProfile() {
               <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
                disabled={!isEditing.email ? true : false}
                value={email}
-              onChange={(e) => setemail(e.target.value)} />
+              onChange={(e) => setemail(e.target.value)}
+              placeholder='Entrez votre adresse e-mail' />
             </div>
             <div className="col-md-6">
               <div className=' d-flex justify-content-between '>
@@ -184,7 +205,95 @@ function EditProfile() {
               <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
                disabled={!isEditing.password ? true : false}
                value={password}
-              onChange={(e) => setpassword(e.target.value)} />
+              onChange={(e) => setpassword(e.target.value)}
+              placeholder='Entrez votre mot de passe' />
+            </div>
+          </div>
+          <hr />
+          <div className="row mt-4">
+            <div className="col-md-6">
+              <div className=' d-flex justify-content-between '>
+                  <label htmlFor='last-name' className='form-label'>Country</label>
+                  {
+                    isEditing.country ? (
+                        <span> <span className='modif-pointer me-2' onClick={() => toggleEdit('country')}>Annuler</span>| 
+                        <span className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
+                      ) : (
+                        <span onClick={() => toggleEdit('country')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      )
+                    }
+                </div>
+                <ReactFlagsSelect
+                    disabled={!isEditing.country ? true : false}
+                    selected={selected}
+                    onSelect={(code) => {
+                      setSelected(code)
+                      setcountryName(getName(code));
+                    }}
+                    searchable
+                />
+                
+              </div>
+              <div className="col-md-6">
+                <div className=' d-flex justify-content-between '>
+                    <label htmlFor='last-name' className='form-label'>Numéro de téléphone</label>
+                    {
+                      isEditing.tel ? (
+                          <span> <span className='modif-pointer me-2' onClick={() => toggleEdit('tel')}>Annuler</span>| 
+                          <span className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
+                        ) : (
+                          <span onClick={() => toggleEdit('tel')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                        )
+                      }
+                </div>
+                  <ReactFlagsSelect
+                      disabled={!isEditing.tel ? true : false}
+                      selected={selected}
+                      onSelect={(code) => {
+                        setSelected(code)
+                      }}
+                      searchable
+                  />
+                  
+              </div>
+          </div>
+
+          <div className="row mt-4">
+          <div className="col-md-6">
+              <div className=' d-flex justify-content-between '>
+                <label htmlFor='last-name' className='form-label'>Adress</label>
+                {
+                  isEditing.address ? (
+                      <span> <span className='modif-pointer me-2' onClick={() => toggleEdit('address')}>Annuler</span>| 
+                      <span className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
+                    ) : (
+                      <span onClick={() => toggleEdit('address')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                    )
+                  }
+              </div>
+              <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
+               disabled={!isEditing.address ? true : false}
+               value={address}
+              onChange={(e) => setaddress(e.target.value)}
+              placeholder='Entrez votre adress' />
+            </div>
+            <div className="col-md-6">
+              <div className=' d-flex justify-content-between '>
+                <label htmlFor='last-name' className='form-label'>Code Postal</label>
+                {
+                  isEditing.CodePostal ? (
+                      <span> <span className='modif-pointer me-2' onClick={() => toggleEdit('CodePostal')}>Annuler</span>| 
+                      <span className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
+                    ) : (
+                      <span onClick={() => toggleEdit('CodePostal')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                    )
+                  }
+              </div>
+              <input style={{width:'100%'}} className='form-control edit-info-inputs' type="text" name="last-name"
+               disabled={!isEditing.CodePostal ? true : false}
+               value={CodePostal}
+              onChange={(e) => setCodePostal(e.target.value)} 
+              placeholder='Entrez votre ZIP code'/>
             </div>
           </div>
         </div>
