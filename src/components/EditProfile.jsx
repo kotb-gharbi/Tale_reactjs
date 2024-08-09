@@ -263,7 +263,7 @@ function EditProfile() {
       }
     }else if(field === "tel") {
       const expressionTel = /^[0-9]+$/;
-      if(!expressionTel.test(tel)) {
+      if(!expressionTel.test(tel) && !tel==="") {
         handlerrors(field, "*Invalid phone number format");
         activeerrors.tel = true;
         return;
@@ -296,7 +296,7 @@ function EditProfile() {
       } else {
         toast.success(`${Alert[field]} updated successfully.`, {
           position: "top-right",
-          autoClose: 3000,  
+          autoClose: 2000,  
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -454,7 +454,7 @@ function EditProfile() {
                       disabled={!isEditing.gender ? true : false}
                     />
                     Homme
-                    <span></span>
+                    <span ></span>
                   </label>
                   
                   <label  className='radio' style={{marginLeft : '20px'}}>
