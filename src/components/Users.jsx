@@ -1,34 +1,44 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import BaseUrl from './BaseUrl';
 import './Users.css';
 import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight,faAngleLeft,faAnglesRight ,faAnglesLeft , faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight, faAngleLeft, faAnglesRight, faAnglesLeft, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+
+
 
 function Users() {
   const [ActiveCategory, setActiveCategory] = useState(1);
   const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); 
-
+  const [data , setdata] = useState([])
+  const [roles, setroles] = useState([]);
 
   const handleCategory = (index) => {
     setActiveCategory(index);
   }
 
-  const data = [
-    { id: 1, name: 'Conan' ,last_name : 'blast', email: 'faza@gmail.com', roles: ['admin'], status: false , date : '22/12/2023 20:15'},
-    { id: 2, name: 'The Terminator',last_name : 'blast', email: 'test@gmail.com', roles: ['client', 'moderator'], status: false , date : '22/12/2023 20:15'},
-    { id: 3, name: 'Predator',last_name : 'frogen', email: 'test@gmail.com', roles: ['client', 'moderator'], status: false , date : '22/12/2023 20:15'},
-    { id: 4, name: 'Predator',last_name : 'blast', email: 'idk@gmail.com', roles: ['client', 'moderator'], status: false , date : '12/12/2023 20:15'},
-    { id: 5, name: 'Predator',last_name : 'glasings', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true , date : '2/12/2000 20:15'},
-    { id: 6, name: 'Predator',last_name : 'pedro', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true , date : '22/12/2023 20:15'},
-    { id: 8, name: 'Predator',last_name : 'akrout', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true, date : '22/12/2023 20:15' },
-    { id: 7, name: 'Predator',last_name : 'blast', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true, date : '22/12/2023 20:15' },
-    { id: 9, name: 'Predator',last_name : 'blast', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true, date : '22/12/2023 20:15' },
-    { id: 10, name: 'Predator',last_name : 'blast', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true , date : '22/12/2023 20:15' },
-    { id: 11, name: 'Predator',last_name : 'blast', email: 'test@gmail.com', roles: ['client', 'moderator'], status: true , date : '22/12/2023 20:15' },
-  ];
+  
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try{
+        const response = await BaseUrl.get('/getUsers')
+        const data = response.data        
+        setdata(data)
+      }catch(error){
+        console.log(error);
+      }
+      
+    }
+    fetchUsers()
+    
+  },[])
+
+
+
 
   const columns = [
     {
@@ -38,7 +48,7 @@ function Users() {
       cell: row => (
         <div className=' d-flex align-items-center'>
           <div className='pfp-container'>
-            <img className='rounded-circle pfp' src="/dashboard-colored.png" alt="User" />
+            <img className='rounded-circle pfp' src={row.profile_pic} alt="User" />
           </div>
           
           <p className='mb-0 ps-2' style={{fontWeight: '600' , fontSize : '13px'}}>{row.name}, {row.last_name}</p>
@@ -55,7 +65,9 @@ function Users() {
     },
     {
       name: <h6 className='m-0'>Roles</h6>,
-      selector: row => row.roles.join(', '),
+      selector: row => row.roles.map((role) => {
+        return role.name
+      }).join(', '),
       sortable: false,
     },
     {
@@ -71,7 +83,15 @@ function Users() {
     },
     {
       name: <h6 className='m-0'>Date d'inscription</h6>,
-      selector: row => row.date,
+      selector: row => {
+        const date = new Date(row.created_at);
+    
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        const formattedTime = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        
+        const finalFormat = `${formattedDate} ${formattedTime}`;
+        return finalFormat
+      },
       sortable: false,
     },
     {
@@ -121,7 +141,7 @@ function Users() {
   const filteredData = data.filter(item =>
     Object.entries(item)
       .filter(([key]) => key !== 'id' && key !== 'status')
-      .some(([key, value]) => value.toString().toLowerCase().includes(filterText.toLowerCase()))
+      .some(([key, value]) => value && value.toString().toLowerCase().includes(filterText.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
