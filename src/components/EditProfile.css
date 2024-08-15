@@ -6,20 +6,6 @@
     border-radius: 15px;
 }
 
-.GoBackArrow{
-    padding: 5px;
-    border-radius: 10px;
-    border: 2px solid black;
-    cursor: pointer;
-    margin-right: 24px;
-    transition: background 0.3s ease;
-}
-.GoBackArrow:hover{
-    color: white;
-    background-color: black;
-}
-
-
 .user-infos{
     position: relative;
 }
@@ -33,6 +19,9 @@
     height: 2px;
     z-index: 1;
 }
+.hide-after::after {
+    display: none;
+  }
 .user-info{
     cursor: pointer;
     font-weight: bold;
@@ -178,6 +167,7 @@
     width: 32px;
     border-radius: 50%;
     background-color: #CCCCCC;
+    display: inline-block;
     position: absolute;
     left: 0;
     top: 7px;
@@ -207,4 +197,105 @@
 }
 .radio input[type="radio"]:checked ~ span {
     background-color: #00bfd2; 
+}
+
+.radio input[type="radio"]:checked ~ .gender-banned{
+    background-color: #CCCCCC;
+}
+
+.GoBackArrow{
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid black;
+    cursor: pointer;
+    margin-right: 24px;
+    transition: background 0.3s ease;
+}
+.GoBackArrow:hover{
+    color: white;
+    background-color: black;
+}
+
+.banned-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+  .banned-popup-filter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 3;
+  }
+  
+  .banned-popup-content {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    z-index: 10; 
+    max-width: 495px;
+    animation: fadeDown 0.5s ease-out;
+  }
+
+
+.cancel-ban-btn{
+    padding: 10px;
+    width: 150px;
+    border: 3px solid #111111;
+    border-radius: 10px;
+    color: black;
+    font-weight: bold;
+}
+.cancel-ban-btn:hover{
+    border: 3px solid #111111;
+    background-color: #111111;
+    color: white;
+}
+
+@keyframes fadeDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .activer-btn {
+    padding: 13px;
+    width: 150px;
+    border: none;
+    color: white !important;
+    background: linear-gradient(90deg, rgba(0,189,169,1) 0%, rgba(0,192,252,1) 100%);
+    transition: background 0.3s ease;
+}
+
+.activer-btn:hover {
+    background: linear-gradient(90deg, rgba(0,200,169,1) 0%, rgba(0,220,252,1) 100%);
+    color: white;
+}
+
+
+.alert-danger{
+    margin: 0 20px 0 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    color: #ED1C24;
+}
+
+.banned{
+    display: none;
 }

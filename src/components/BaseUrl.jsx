@@ -4,8 +4,7 @@ const BaseUrl = axios.create({
     baseURL : 'http://localhost:8000/api'
 })
 
-BaseUrl.interceptors.request.use(
-    (config) => {
+BaseUrl.interceptors.request.use((config) => {
         if(!config.url.includes('/login')){
             const token = localStorage.getItem('token');
             if (token){

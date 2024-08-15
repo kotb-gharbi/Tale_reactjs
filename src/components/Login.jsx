@@ -31,15 +31,20 @@ function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:8000/api/login', data);
-      if (response.data.status) {
-        localStorage.setItem("token", response.data.token);
+      const result = await response.data
+      if (result.status) {
+        localStorage.setItem("token", result.token);
         navigate('/sidebar/dashboard');
       } else {
-        if (response.data.message === "Email incorrect") {
-          setError('email', { message: '*Email incorrect' });
-        } else if (response.data.message === "Password incorrect") {
-          setError('password', { message: '*Password incorrect' });
+        const msg = result.message
+        if (msg === "Email incorrect") {
+          setError('email', { message: '*'+msg });
+        }else if (msg === "User does not have the required role"){
+          setError('email' , {message : '*'+msg})
+        } else if (msg === "Password incorrect") {
+          setError('password', { message: '*'+msg });
         }
+
       }
     } catch (error) {
       console.log(error);

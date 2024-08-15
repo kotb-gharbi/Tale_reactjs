@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import './EditProfile.css'
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom'
 import ReactFlagsSelect from "react-flags-select-2";
 import { getCode, getName } from 'country-list';
 import { ToastContainer, toast, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BaseUrl from './BaseUrl';
-import ProfileHeader from './ProfileHeader';
+import Ripples from 'react-ripples';
 
 
 function EditProfile() {
@@ -39,7 +42,7 @@ function EditProfile() {
 
   const [originalValues, setOriginalValues] = useState({
     name: "",
-    lastName: "",
+    last_name: "",
     email: "",
     birth: "",
     gender: "",
@@ -72,7 +75,7 @@ function EditProfile() {
     name: 'edit-name',
     email : 'edit-email', 
     password :'change-password',
-    last_name: 'edit-lastname',
+    last_name: 'edit-last_name',
     birth : 'edit-birth',
     gender : 'edit-gender',
     country : 'edit-country',
@@ -93,6 +96,16 @@ function EditProfile() {
     CodePostal : 'Postal code', 
   })
 
+  const [TogglePopup, setTogglePopup] = useState(false)
+  const [banned, setbanned] = useState(false)
+  const [ban_reason, setban_reason] = useState("")
+
+
+  const togglepopup = () => {
+    setTogglePopup(!TogglePopup)
+    
+  }
+
   const toggleEdit =  (field) => {
     setIsEditing(prevState => ({
       ...prevState,
@@ -110,8 +123,9 @@ function EditProfile() {
           setname(originalValues.name);
           activeerrors.name = false
           break;
-        case 'lastName':
-          setlast_name(originalValues.lastName);
+        case 'last_name':
+          setlast_name(originalValues.last_name);
+          activeerrors.name = false
           break;
         case 'email':
           setemail(originalValues.email);
@@ -193,7 +207,7 @@ function EditProfile() {
   
         setOriginalValues({
           name: data.name,
-          lastName: data.last_name,
+          last_name: data.last_name,
           email: data.email,
           birth: data.birth,
           gender: data.gender,
@@ -214,6 +228,12 @@ function EditProfile() {
         setaddress(data.address);
         setCodePostal(data.codePostal);
         setprofile_pic(data.profile_pic)
+        if(data.banned === 0){
+          setbanned(false)
+        }else{
+          setbanned(true)
+        }
+        setban_reason(data.ban_reason)
   
       }catch(error){
         console.log(error);
@@ -262,7 +282,7 @@ function EditProfile() {
         return
       }
     }else if(field === "tel") {
-      const expressionTel = /^[0-9]+$/;
+      const expressionTel = /^[0-9+()\-\/\s]+$/
       if(!expressionTel.test(tel) && !tel==="") {
         handlerrors(field, "*Invalid phone number format");
         activeerrors.tel = true;
@@ -312,7 +332,7 @@ function EditProfile() {
       }));
 
       }
-
+      
       if (field ==='password'){
         setpassword('');
       }
@@ -333,22 +353,48 @@ function EditProfile() {
     
   }
 
-
-
   return (
     <>
-      <ProfileHeader id={params.id} profile_pic={profile_pic} name={name} last_name={last_name} />
+      <div className="card profile-card" style={{marginBottom : '17px'}}>
+          <div className="card-body p-0">
+              <div className=" d-flex justify-content-between align-items-center">
+                  <div className=' d-flex justify-content-center align-items-center'>
+
+                      <Link to='/sidebar/gestion-des-utilisateurs' style={{textDecoration:'none'  , color:'inherit'}}>
+                        <FontAwesomeIcon icon={faArrowLeft} className='GoBackArrow' />
+                      </Link>
+
+                      <img className='rounded-circle ' style={{width:'70px' , height:'70px'}} src={profile_pic} alt="pfp" />
+                      <div className='ms-4'>
+                        <p className='mb-0' style={{fontWeight:'600' , fontSize:'22px'}}>{originalValues.name} {originalValues.last_name}</p>
+                        <p className='mb-0'> Modérateur | {params.id}</p>
+                      </div>
+                  </div>
+                  <div className=' d-flex justify-content-center align-items-center'>
+                    {
+                      banned && (
+                        <div class="alert alert-danger" role="alert">
+                          le compte a été définitivement banni !
+                        </div>
+                      )
+                    }
+                    <FontAwesomeIcon icon={faEllipsis} onClick={banned ? togglepopup : ''} style={{cursor : 'pointer'}} />
+                  </div>
+              </div>
+          </div>
+      </div>
+
 
       <div className="card profile-card">
         <div className="card-body p-0">
-          <div className='user-infos'>
-              <span className={`user-info ${ActiveInfo === 1 ? 'active-info' : ''}`}
+          <div className={`user-infos ${TogglePopup ? 'hide-after' : ''}`}>
+              <span className={`user-info ${ActiveInfo === 1 ? 'active-info' : ''} ${TogglePopup ? 'hide-after' : ''}`}
                 onClick={() => handleInfo(1)}>
                 Informations</span>
-              <span className={`user-info ${ActiveInfo === 2 ? 'active-info' : ''}`}
+              <span className={`user-info ${ActiveInfo === 2 ? 'active-info' : ''} ${TogglePopup ? 'hide-after' : ''}`}
                 onClick={() => handleInfo(2)}>
                 Enquête</span>
-                <span className={`user-info ${ActiveInfo === 3 ? 'active-info' : ''}`}
+                <span className={`user-info ${ActiveInfo === 3 ? 'active-info' : ''} ${TogglePopup ? 'hide-after' : ''}`}
                 onClick={() => handleInfo(3)}>
                 Points et récompense</span>
           </div>
@@ -364,7 +410,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('name')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.name,'name')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('name')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('name')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
                   
@@ -388,7 +434,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('last_name')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.last_name,'last_name')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('last_name')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('last_name')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -413,7 +459,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('birth')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.birth,'birth')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('birth')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('birth')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -437,7 +483,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('gender')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.gender,'gender')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('gender')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('gender')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -454,7 +500,7 @@ function EditProfile() {
                       disabled={!isEditing.gender ? true : false}
                     />
                     Homme
-                    <span ></span>
+                    <span className={banned ? 'gender-banned' : ''} ></span>
                   </label>
                   
                   <label  className='radio' style={{marginLeft : '20px'}}>
@@ -468,7 +514,7 @@ function EditProfile() {
                       disabled={!isEditing.gender ? true : false}
                     />
                     Femme
-                    <span></span>
+                    <span  className={banned ? 'gender-banned' : ''} ></span>
                   </label>
                 
               </div>
@@ -484,7 +530,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('email')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.email,'email')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('email')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('email')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -507,7 +553,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('password')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.password,'password')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('password')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('password')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -534,7 +580,7 @@ function EditProfile() {
                         <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('country')}>Annuler</span>| 
                         <span onClick={() => handleEdit(endpoint.country,'country')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                       ) : (
-                        <span onClick={() => toggleEdit('country')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                        <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('country')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                       )
                     }
                 </div>
@@ -548,7 +594,7 @@ function EditProfile() {
                     }}
                     searchable
                 />
- 
+                
               </div>
               <div className="col-md-6">
                 <div className=' d-flex justify-content-between '>
@@ -558,7 +604,7 @@ function EditProfile() {
                           <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('tel')}>Annuler</span>| 
                           <span onClick={() => handleEdit(endpoint.tel,'tel')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                         ) : (
-                          <span onClick={() => toggleEdit('tel')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                          <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('tel')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                         )
                       }
                 </div>
@@ -586,7 +632,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('address')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.address,'address')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('address')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span  className={banned ? "banned" : ''}  onClick={() => toggleEdit('address')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -604,7 +650,7 @@ function EditProfile() {
                       <span> <span className='modif-pointer me-2' onClick={() => untoggleEdit('CodePostal')}>Annuler</span>| 
                       <span onClick={() => handleEdit(endpoint.CodePostal,'CodePostal')} className='modif-pointer ms-2' style={{color :'#2FB300'}}>Confirmer</span></span>
                     ) : (
-                      <span onClick={() => toggleEdit('CodePostal')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
+                      <span className={banned ? "banned" : ''} onClick={() => toggleEdit('CodePostal')} style={{color :'#004EE4' , cursor:'pointer'}}>Modifier</span>
                     )
                   }
               </div>
@@ -630,6 +676,33 @@ function EditProfile() {
           </div>
         </div>
       </div>
+      {
+        TogglePopup && (
+          <div className="banned-popup" onClick={togglepopup}>
+            <div className="banned-popup-filter"></div>
+            <div className="card banned-popup-content" onClick={e => e.stopPropagation()}>
+              <div className="card-body">
+                <div style={{fontWeight : 'bold'}}> Compte banni</div>
+
+                <p className='mb-1 mt-2'>Compte est banni définitivement, car il a enfreint la politique relative à la propriété intellectuelle de Tale.
+                </p>
+
+                <p><span style={{fontWeight : 'bold'}}>Raison : </span> {ban_reason}</p>
+
+                <div className=' d-flex justify-content-between align-items-center'>
+                  <button className='btn cancel-ban-btn' onClick={togglepopup}>Cancel</button>
+                  <div style={{display: 'inline-flex',borderRadius: 10,overflow: 'hidden',}}>
+                    <Ripples color="rgb(230, 230, 230)" during={500}>
+                    <button className='btn activer-btn'>Activer</button>
+                    </Ripples>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </>
   )
 }
