@@ -13,12 +13,17 @@ import Analyse from './components/Analyse.jsx';
 import Support from './components/Support.jsx';
 import EditProfile from './components/EditProfile.jsx';
 import NoPageFound from './components/NoPageFound.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <Navigate to="/login" />,
+  },
+  {
+    path: '/login',
     element: <Login />,
   },
   {
@@ -27,7 +32,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/sidebar',
-    element: <Navbar />,
+    element: <ProtectedRoute element={<Navbar/>} />,
     children : [
       {
         path: '',
@@ -35,39 +40,39 @@ const router = createBrowserRouter([
       },
       {
         path: '/sidebar/dashboard',
-        element: <Dash />,
+        element: <ProtectedRoute element={<Dash/>} />,
       },
       {
         path: '/sidebar/gestion-des-utilisateurs',
-        element: <Users />,
+        element: <ProtectedRoute element={<Users />} />,
       },
       {
         path: '/sidebar/gestion-des-utilisateurs/:id',
-        element: <EditProfile />
+        element: <ProtectedRoute element={<EditProfile />} />,
       },
       {
         path: '/sidebar/sanctions',
-        element: <Sanctions />,
+        element: <ProtectedRoute element={<Sanctions />} />,
       },
       {
         path: '/sidebar/reclamations',
-        element: <Reclamations />,
+        element: <ProtectedRoute element={<Reclamations />} />,
       },
       {
         path: '/sidebar/approbation',
-        element: <Approbation />,
+        element: <ProtectedRoute element={<Approbation />} />,
       },
       {
         path: '/sidebar/roles',
-        element: <Roles />,
+        element: <ProtectedRoute element={<Roles />} />,
       },
       {
         path: '/sidebar/analyse',
-        element: <Analyse />,
+        element: <ProtectedRoute element={<Analyse />} />,
       },
       {
         path: '/sidebar/support',
-        element: <Support />,
+        element: <ProtectedRoute element={<Support />} />,
       },
       
     ]
