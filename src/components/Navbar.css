@@ -13,10 +13,6 @@ body, html {
     margin-right: 48px;
 }
 
-.left{
-    margin-right: 80px;
-    margin-left: 10px;
-}
 
 .icon{
     color:#fff;
@@ -31,8 +27,8 @@ body, html {
     width: 15px;
     height: 15px;
     position: absolute;
-    top: 3rem;
-    right: 1.063rem;
+    top: 3.2rem;
+    right: 1.6rem;
 }
 
 .MailBell{
@@ -155,4 +151,29 @@ body, html {
 
 .footer{
     height: 75px;
+}
+
+
+.logoutdropdown {
+    position: absolute;
+    top: 4.2rem;
+    right: 3.5rem;
+    background-color: #fff;
+    border: 1px solid rgb(0, 0, 0);
+    width: 100px;
+    border-radius: 8px;
+    z-index: 20;
+  }
+
+.logout{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    margin: 6px 0;
+    cursor: pointer;
+}
+
+.logout:hover{
+    background-color: rgb(225, 225, 225);
 }

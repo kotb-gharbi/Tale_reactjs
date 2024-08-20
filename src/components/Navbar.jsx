@@ -1,11 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Navbar.css';
-import {NavLink, Outlet } from 'react-router-dom';
+import {useNavigate, NavLink, Outlet } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import BaseUrl from './BaseUrl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 
 function Navbar() {
   const [expanded, setExpanded] = useState(true);
+  const [logoutDropdown, setlogoutDropdown] = useState(false)
+  const [ProfilePic, setProfilePic] = useState('')
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetch = async() => {
+
+      const token = localStorage.getItem('token');
+      
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          const id = decodedToken.data.id
+          const response = await BaseUrl.get(`/getUser/${id}`)
+          const data =  response.data
+          setProfilePic(data.profile_pic)
+          
+        } catch (error) {
+          console.error('Failed to decode token:', error);
+        }
+      } else {
+        console.log('No token found in localStorage');
+      }
+    };
+
+    fetch();
+
+  }, []);
+
+  const handlelogout = () => {
+    localStorage.removeItem('token')
+    setlogoutDropdown(false)
+    console.log('logged out');
+    navigate('/login');
+  }
+  
   return (
     <>
       <div className="d-flex justify-content-between mt-3">
@@ -14,11 +53,23 @@ function Navbar() {
           <img src="/menu.png" alt="menu" className='menu pointer' onClick={() => setExpanded((prev) => !prev)} />
         </div>
         <div>
-          <img src="/mail.png" alt="mail" className='MailBell pointer' />
-          <img src="/bell.png" alt="bell" className='MailBell left pointer' />
+          <img src="/mail.png" alt="mail" className='MailBell pointer' style={{marginRight:'10px'}} />
+          <img src="/bell.png" alt="bell" className='MailBell pointer' style={{marginRight:'40px'}} onClick={() => setlogoutDropdown(prev => !prev)} />
+          <img src={ProfilePic} alt="pfp" className='pointer rounded-circle pfp' onClick={() => setlogoutDropdown(prev => !prev)}
+           style={{height:"50px" , width:'50px',marginRight:'30px'}} />
+          {
+            logoutDropdown && (
+              <div className='logoutdropdown' onClick={handlelogout}>
+                <div className='logout'>
+                  <FontAwesomeIcon icon={faRightFromBracket} style={{marginRight:'5px'}} />
+                  <p className='mb-0'>Logout</p>
+                </div>
+              </div>
+            )
+          }
+          <img src="/arrow.png" alt="down arrow" className='arrow pointer' />
         </div>
       </div>
-      <img src="/arrow.png" alt="down arrow" className='arrow pointer' />
 
       <div className="container-fluid">
         <div className="row mt-2 d-flex">
