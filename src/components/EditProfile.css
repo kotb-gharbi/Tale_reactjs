@@ -19,6 +19,7 @@
     height: 2px;
     z-index: 1;
 }
+
 .hide-after::after {
     display: none;
   }
@@ -255,6 +256,8 @@
     border-radius: 10px;
     color: black;
     font-weight: bold;
+    background-color: #fff;
+    transition: background color border 0.2s ease;
 }
 .cancel-ban-btn:hover{
     border: 3px solid #111111;

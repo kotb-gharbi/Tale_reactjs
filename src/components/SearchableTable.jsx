@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState  } from 'react';
 import './SearchableTable.css';
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -65,17 +65,6 @@ function SearchableTable({columns , data , customstyles}) {
               columns={columns}
               data={paginatedData}
               customStyles={customstyles}
-              selectableRows
-              selectableRowsComponent={({ selectedRow, onChange }) => (
-                <label className="custom-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedRow}
-                    onChange={e => onChange(e.target.checked)}
-                  />
-                  <span className="custom-checkbox-box"></span>
-                </label>
-              )}
             />
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './Login.css';
@@ -27,6 +27,13 @@ function Login() {
     setError, 
     formState: { errors, isSubmitting } 
   } = useForm();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/sidebar/dashboard');
+    }
+  }, [navigate]);
 
   const onSubmit = async (data) => {
     try {

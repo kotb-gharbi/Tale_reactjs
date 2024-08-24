@@ -14,6 +14,7 @@ import Support from './components/Support.jsx';
 import EditProfile from './components/EditProfile.jsx';
 import NoPageFound from './components/NoPageFound.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { AddUserFormProvider } from './components/AddUserFormContext.jsx';
 
 
 
@@ -83,7 +84,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router}/>
+      <AddUserFormProvider>
+        <RouterProvider router={router} />
+      </AddUserFormProvider>
     </>
     
   );

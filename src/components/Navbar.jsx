@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import './Navbar.css';
 import {useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import BaseUrl from './BaseUrl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { AddUserFormContext } from './AddUserFormContext.jsx';
 
 
 function Navbar() {
   const [expanded, setExpanded] = useState(true);
   const [logoutDropdown, setlogoutDropdown] = useState(false)
   const [ProfilePic, setProfilePic] = useState('')
+  const { AddUserForm, setAddUserForm } = useContext(AddUserFormContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +43,6 @@ function Navbar() {
   const handlelogout = () => {
     localStorage.removeItem('token')
     setlogoutDropdown(false)
-    console.log('logged out');
     navigate('/login');
   }
   
@@ -59,7 +60,7 @@ function Navbar() {
            style={{height:"50px" , width:'50px',marginRight:'30px'}} />
           {
             logoutDropdown && (
-              <div className='logoutdropdown' onClick={handlelogout}>
+              <div className={`logoutdropdown ${AddUserForm ? 'blurred' : ''}`}  onClick={handlelogout}>
                 <div className='logout'>
                   <FontAwesomeIcon icon={faRightFromBracket} style={{marginRight:'5px'}} />
                   <p className='mb-0'>Logout</p>

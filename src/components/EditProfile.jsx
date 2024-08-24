@@ -324,7 +324,7 @@ function EditProfile() {
           progress: undefined,
           icon: "✅", 
         });
-        // Reset the field error state after successful update
+        
         setactiveerrors(prevState => ({ ...prevState, [field]: false }));
         setOriginalValues(prevValues => ({
           ...prevValues,
