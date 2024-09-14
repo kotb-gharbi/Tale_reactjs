@@ -180,3 +180,38 @@ h6{
 .error-message {
   min-height: 1em;
 }
+
+.user-dropdown {
+  position: absolute;
+  left: -7.5rem;
+  top: -2rem;
+  border: 1px solid rgb(190, 190, 190);
+  border-radius: 10px;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+  background-color: white;
+  z-index: 999;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.delete {
+  color: red;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background-color: #ffe6e6;
+}

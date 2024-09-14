@@ -3,7 +3,7 @@ import { Link} from 'react-router-dom';
 import BaseUrl from './BaseUrl';
 import './Users.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis,faTrashCan,faUser } from '@fortawesome/free-solid-svg-icons';
 import SearchableTable from './SearchableTable.jsx';
 import Ripples from 'react-ripples';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,8 @@ import { ToastContainer, toast, Flip } from 'react-toastify';
 
 function Users() {
   const [ActiveCategory, setActiveCategory] = useState(1);
+  const [dropdownVisible, setDropdownVisible] = useState(null);
+
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [roles, setroles] = useState([])
   const [data , setdata] = useState([]);
@@ -29,6 +31,39 @@ function Users() {
     formState: { errors, isSubmitting } 
   } = useForm();
 
+  const handleDropdownToggle = (id) => {
+    setDropdownVisible(dropdownVisible === id ? null : id);
+  };
+
+  const handleDeleteUser = async (id) => {
+    try{
+      await BaseUrl.delete(`/delete_user/${id}`)
+      toast.success(`User deleted successfully.`, {
+        position: "top-right",
+        autoClose: 2000,  
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        icon: "✅", 
+      });
+      setdata(prevData => prevData.filter(user => user.id !== id));
+    }catch(e){
+      toast.error("An error occurred. Please try again.", {
+        position: "top-right",
+        autoClose: 2000, 
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        icon: "❌", 
+      });
+      console.log(e);
+    }
+
+  };
 
   const handleCategory = (index) => {
     setActiveCategory(index);
@@ -192,10 +227,28 @@ function Users() {
     {
       name: <h6 className='m-0'>Actions</h6>,
       cell : row => (
-        <Link to={`/sidebar/gestion-des-utilisateurs/${row.id}`} style={{textDecoration:'none' , color: 'inherit'}}>
-          <FontAwesomeIcon icon={faEllipsis} className='actions-dots'/>
-        </Link>
-        
+        <div className=" position-absolute">
+          <FontAwesomeIcon
+            icon={faEllipsis}
+            className="actions-dots"
+            onClick={() => handleDropdownToggle(row.id)}
+          />
+          {dropdownVisible === row.id && (
+            <ul className="user-dropdown">
+              <li>
+                <Link to={`/sidebar/gestion-des-utilisateurs/${row.id}`} className="dropdown-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <FontAwesomeIcon icon={faUser} style={{ paddingRight: '5px', width: '18px', height: '18px' }} />
+                  Check Profile
+                </Link>
+              </li>
+              <li className="dropdown-item delete" onClick={() => handleDeleteUser(row.id)}>
+                <FontAwesomeIcon icon={faTrashCan} style={{ color: "#ff0000", paddingRight: '5px', width: '18px', height: '18px' }} />
+                Delete user
+              </li>
+            </ul>
+          )}
+        </div>
+
       ),
       sortable : false,
       width:'7rem'
@@ -253,7 +306,7 @@ function Users() {
           </div>
 
 
-          <SearchableTable data={data} columns={columns} customstyles={customstyles}/>
+          <SearchableTable data={data} columns={columns} customstyles={customstyles} />
           {
             AddUserForm && (
               <div className="form-popup" onClick={toggleFormpopup}>
@@ -262,7 +315,7 @@ function Users() {
                   <div className="card-body">
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className=' mb-4 d-flex justify-content-center align-items-center'>
-                          <h1>Ajouter</h1>
+                          <h1>Add User</h1>
                       </div>
                       <div className='row'>
                         <div className="col">
